@@ -4,6 +4,7 @@ import akka.actor.ActorRef
 import model.Util.Position
 import java.util.UUID
 import model.Util.util.RoomDescription
+import com.mohiva.play.silhouette.api.LoginInfo
 
 sealed abstract class ServerMessage
 case class GetUniqueId ()  extends ServerMessage

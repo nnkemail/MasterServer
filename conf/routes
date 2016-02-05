@@ -1,0 +1,26 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.ApplicationController.index
+#GET     /home						controllers.ApplicationController.home
+GET 	/roomsFacebook				controllers.ApplicationController.roomsFacebook
+GET     /game/:id/:nick           	controllers.ApplicationController.game(id: Int, nick: String)
+GET     /game/:id/           	    controllers.ApplicationController.game(id: Int, nick = "")
+GET		/roomsMap					controllers.ApplicationController.roomsMap
+GET     /signIn                     controllers.ApplicationController.signIn
+GET     /authenticate/:provider     controllers.SocialAuthController.authenticate(provider)
+
+# ADDED
+GET     /logOut                     controllers.ApplicationController.logOut
+
+
+# WebSocket stream
+#GET     /socket/game                controllers.ApplicationController.socketGame
+GET     /socket/chatMap             controllers.ApplicationController.socketChatMap
+GET     /socket/socketLoggedChatMap controllers.ApplicationController.socketLoggedChatMap
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+

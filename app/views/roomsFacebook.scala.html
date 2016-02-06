@@ -110,7 +110,7 @@
                     var idRoom = roomsMap.choosenMarker.marker.idRoom;
                     //roomsMap.onDisconnect();
                     var playerName = $('#loggedNickname').val()
-                    window.setTimeout(window.open("/game/" + idRoom +"/" + playerName, "_self"), 1000);
+                    window.setTimeout(window.open("/game?id=" + idRoom +"&nick=" + playerName, "_self"), 1000);
                 } else {
                     document.getElementById("RoomDescription").innerHTML = "First choose a room";
                 }

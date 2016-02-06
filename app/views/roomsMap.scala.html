@@ -30,13 +30,6 @@
 
     <link href='http://fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
     <script>
-        function writeToScreen(message) {
-            var pre = document.createElement("p");
-            var status = document.getElementById("status");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = message + " " + new Date();
-            status.appendChild(pre);
-        }
 
         $(document).ready(function() {
             var adress = jsRoutes.controllers.ApplicationController.socketChatMap().webSocketURL()
@@ -54,7 +47,8 @@
                 if (roomsMap.choosenMarker !== null && roomsMap.choosenMarker.marker.getAnimation() !== null) {
                     var idRoom = roomsMap.choosenMarker.marker.idRoom;
                     roomsMap.onDisconnect();
-                    window.open("/game/" + idRoom, "_self");
+                    var playerName = $('#Nickname').val()
+                    window.open("/game?id=" + idRoom +"&nick=" + playerName, "_self");
                 } else {
                     document.getElementById("RoomDescription").innerHTML = "First choose a room";
                 }
@@ -70,10 +64,9 @@
     <p>Meet new people in your neighborhood and have fun!</p>
 	</div>
 	<div class="button-section">
-	<div class="button-wrapper">
+	<div class="button-wrapper" style="position: absolute; margin-left:auto; margin-right:auto">
+    <input id="Nickname" class="form-control" placeholder="Nickname" onclick="this.value = ''" maxlength="30"/>
     <button type="submit" id="PlayRoomButton">Play</button>
-	</div>
-    <p id="status"></p>
 	</div>
 	</div>
 </body>

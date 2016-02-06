@@ -102,7 +102,7 @@ Rooms.prototype = {
         });
         marker.idRoom = id;
 
-        var contentString = String(marker.idRoom);
+        var contentString = '<p style="color:black;margin:0;padding:0">' + String(marker.title) + '</p>';
         marker.infowindow = new google.maps.InfoWindow({
             content: contentString
         });
@@ -131,10 +131,11 @@ Rooms.prototype = {
                     lng = marker.getPosition().lng();
                     address = results[0].formatted_address;
                     total = ("<strong>\nAddress:</strong> " + address);
+                    document.getElementById("RoomDescription").innerHTML = (total);
                     //return total;
                 }
             });
-            document.getElementById("RoomDescription").innerHTML = (total);
+            //document.getElementById("RoomDescription").innerHTML = (total);
         });
     },
 

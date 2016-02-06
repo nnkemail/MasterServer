@@ -161,10 +161,11 @@ LoggedRooms.prototype = {
                     lng = marker.getPosition().lng();
                     address = results[0].formatted_address;
                     total = ("<strong>\nAddress:</strong> " + address);
+                    document.getElementById("RoomDescription").innerHTML = (total);
                     //return total;
                 }
             });
-            document.getElementById("RoomDescription").innerHTML = (total);
+            //document.getElementById("RoomDescription").innerHTML = (total);
         });
     },
 

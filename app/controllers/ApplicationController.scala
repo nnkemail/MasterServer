@@ -113,8 +113,9 @@ def roomsFacebook = SecuredAction.async { implicit request =>
      Future.successful(Ok(views.html.signIn(socialProviderRegistry)))
   }
   
-  def game(idRoom: Int, nick: String) = UserAwareAction.async { implicit request =>
+  def game(idRoom: Int, nickOption: Option[String]) = UserAwareAction.async { implicit request =>
     println("przyszlo game idRoom: " + idRoom); 
+    var nick = nickOption getOrElse ""
     implicit val timeout = Timeout(5 seconds)
     var resp = ask(masterServer, GiveServer(idRoom)).mapTo[(String, Int)] 
     resp map {(res) => println(res._1); 

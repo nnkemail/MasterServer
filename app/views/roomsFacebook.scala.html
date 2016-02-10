@@ -110,7 +110,7 @@
                     var idRoom = roomsMap.choosenMarker.marker.idRoom;
                     //roomsMap.onDisconnect();
                     var playerName = $('#loggedNickname').val()
-                    window.setTimeout(window.open("/game/" + idRoom +"/" + playerName, "_self"), 1000);
+                    window.setTimeout(window.open("/game?id=" + idRoom +"&nick=" + playerName, "_self"), 1000);
                 } else {
                     document.getElementById("RoomDescription").innerHTML = "First choose a room";
                 }
@@ -201,7 +201,7 @@
             });
         });
     </script>
-	<!-- Map and Game friends; Logout Button -->
+    <!-- Map and Game friends; Logout Button -->
 	<div class="background">
 	<div class="wrapper">
 	<div class="NamePanel">
@@ -216,7 +216,7 @@
 	<p id="status"></p>
 	</div>
 	</div>
-	<!-- End Map and Game friends; Logout Button -->
+	<!-- End Map and Game friends -->
 	
 	<!-- Room Description -->
 	<div class="roomDescription">
@@ -236,7 +236,6 @@
 	<!-- End Facebook friends -->
 	
 	<div class="ButtonSectionWrapper">
-	
 	<!-- Get friedns from facebook panel -->
 	<div class="getFriendsPanel">
 	<p type="submit" id="GetFacebookFriends"><img src="assets/img/facebook-icon1.png"></img></p>

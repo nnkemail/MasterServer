@@ -53,7 +53,7 @@
 
         $(document).ready(function() {
             var adress = jsRoutes.controllers.ApplicationController.socketLoggedChatMap().webSocketURL()
-            var roomsMap = new LoggedRooms(adress);
+            var roomsMap = new LoggedRooms("ws://46.101.222.10/socket/socketLoggedChatMap");
             var friend_data = [];
             var myFacebookID = (@userID).toString();
             

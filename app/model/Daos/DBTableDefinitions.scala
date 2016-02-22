@@ -36,8 +36,10 @@ trait DBTableDefinitions {
   )
   
   class Friends(tag: Tag) extends Table[DBFriends](tag, "friends") {
-    def userID = column[String]("userID", O.PrimaryKey)
+    def userID = column[String]("userID")
     def friendID = column[String]("friendID");
+    def user = foreignKey("user_FK", userID, slickUsers)(_.id)
+    def friend = foreignKey("firend_FK", friendID, slickUsers)(_.id)
     def * = (userID, friendID) <> (DBFriends.tupled, DBFriends.unapply)
   }
 
@@ -62,6 +64,8 @@ trait DBTableDefinitions {
   class UserLoginInfos(tag: Tag) extends Table[DBUserLoginInfo](tag, "userlogininfo") {
     def userID = column[String]("userID")
     def loginInfoId = column[Long]("loginInfoId")
+    def user = foreignKey("user_FK", userID, slickUsers)(_.id)
+    def loginInfo = foreignKey("loginInfo_FK", loginInfoId, slickLoginInfos)(_.id)
     def * = (userID, loginInfoId) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
   }
 
@@ -111,6 +115,7 @@ trait DBTableDefinitions {
     def expiresIn = column[Option[Int]]("expiresin")
     def refreshToken = column[Option[String]]("refreshtoken")
     def loginInfoId = column[Long]("logininfoid")
+    def loginInfo = foreignKey("loginInfo_FK", loginInfoId, slickLoginInfos)(_.id)
     def * = (id.?, accessToken, tokenType, expiresIn, refreshToken, loginInfoId) <> (DBOAuth2Info.tupled, DBOAuth2Info.unapply)
   }
   

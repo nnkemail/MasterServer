@@ -6,11 +6,11 @@ import play.api.libs.json._
 import com.mohiva.play.silhouette.api.LoginInfo
 import java.util.UUID
 
-object LoggedChatMapActor {
-  def props(out: ActorRef, masterServer: ActorRef, user: User) = Props(new LoggedChatMapActor(out, masterServer, user))
+object LoggedMapActor {
+  def props(out: ActorRef, masterServer: ActorRef, user: User) = Props(new LoggedMapActor(out, masterServer, user))
 }
 
-class LoggedChatMapActor(val out: ActorRef, var masterServer: ActorRef, var user: User) extends Actor {
+class LoggedMapActor(val out: ActorRef, var masterServer: ActorRef, var user: User) extends Actor {
   override def preStart() = {
     masterServer ! JoinChatMap(Some(user.userID))
   }

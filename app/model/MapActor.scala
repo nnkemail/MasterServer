@@ -4,11 +4,11 @@ import play.libs.Akka
 import akka.actor._
 import play.api.libs.json._
 
-object ChatMapActor {
-  def props(out: ActorRef, masterServer: ActorRef) = Props(new ChatMapActor(out, masterServer))
+object MapActor {
+  def props(out: ActorRef, masterServer: ActorRef) = Props(new MapActor(out, masterServer))
 }
 
-class ChatMapActor(val out: ActorRef, var masterServer: ActorRef) extends Actor {
+class MapActor(val out: ActorRef, var masterServer: ActorRef) extends Actor {
   override def preStart() = {
     masterServer ! JoinChatMap
   }

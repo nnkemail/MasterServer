@@ -9,11 +9,6 @@ import com.mohiva.play.silhouette.api.LoginInfo
 sealed abstract class ServerMessage
 case class GetUniqueId ()  extends ServerMessage
 case class Join (userID: Option[String])  extends ServerMessage
-//case class TickMove ()  extends ServerMessage
-//case class SubscribedID (uID: Int) extends ServerMessage
-//case class Goodbye(uID: Int) extends ServerMessage
-//case class PlayerData(id: Int, x: Double, y: Double) extends ServerMessage
-//case class EntitiesInView(ent: List[PlayerData]) extends ServerMessage
 case class GiveMeUniqueId() extends ServerMessage
 //case class UpdateData(id: Int, x: Double, y: Double, size: Double, R: Int, G: Int, B: Int, isSpiked: Boolean) extends ServerMessage
 case class UpdateData(id: Int, x: Double, y: Double, size: Double, R: Int, G: Int, B: Int, eType: Int, name: String) extends ServerMessage
@@ -28,8 +23,6 @@ case class JoinChatMap(userID: Option[UUID]) extends ServerMessage
 case class AddNewRoom(title: String, lat: Double, lng: Double) extends ServerMessage
 case class GetFriends(userLoginInfo: LoginInfo) extends ServerMessage
 case class AddedFriend(friend: User, roomID: Option[Int]) extends ServerMessage
-
-
 
 case class AddFacebookFriend(myFacebookID: String, friendFacebookID: String) extends ServerMessage
 case class NotifyFriendAboutMyNewRoom(userID: UUID, roomID: Option[Int]) extends ServerMessage

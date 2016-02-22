@@ -139,7 +139,7 @@ def roomsFacebook = SecuredAction.async { implicit request =>
  // }
     
   def socketChatMap = WebSocket.acceptWithActor[JsValue, JsValue] {request => out =>
-    ChatMapActor.props(out, masterServer)
+    MapActor.props(out, masterServer)
   }
   
   def socketLoggedChatMap = WebSocket.tryAcceptWithActor[JsValue, JsValue] { request => 
@@ -147,7 +147,7 @@ def roomsFacebook = SecuredAction.async { implicit request =>
     SecuredRequestHandler { securedRequest =>
       Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
     }.map {
-      case HandlerResult(r, Some(user)) => Right(out => LoggedChatMapActor.props(out, masterServer, user))
+      case HandlerResult(r, Some(user)) => Right(out => LoggedMapActor.props(out, masterServer, user))
       case HandlerResult(r, None) => Left(r)
     }
   }

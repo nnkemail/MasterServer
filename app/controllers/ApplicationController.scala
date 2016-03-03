@@ -97,8 +97,7 @@ def roomsFacebook = SecuredAction.async { implicit request =>
   }
   
   def roomsMap() = Action.async { implicit request =>
-    var resp = getRooms();
-    resp map (roomList => Ok(views.html.roomsMap(roomList)))
+    Future.successful(Ok(views.html.roomsMap()))
   }
     
   //MOVE TO SERVER

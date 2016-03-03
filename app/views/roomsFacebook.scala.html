@@ -1,7 +1,7 @@
 @import model.RoomPacket
 @import model.FriendPacket
 
-@(rooms: List[RoomPacket], gameFriends: List[FriendPacket], accessTokenOfUser: String, userID: String)(implicit request: RequestHeader)
+@(accessTokenOfUser: String, userID: String)(implicit request: RequestHeader)
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -58,6 +58,7 @@
             var myFacebookID = (@userID).toString();
             
             var resultFriends = '';
+            var index = 0;      
 
             $("#NewRoomButton").on("click", function (event) {
             	event.stopPropagation();

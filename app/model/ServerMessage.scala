@@ -21,7 +21,7 @@ case class RoomPacket(id: Int, title: String, lat: Double, lng: Double) extends 
 case class FriendPacket(friendID: String, roomID: String, name: String, avatar: String) extends ServerMessage
 case class JoinChatMap(userID: Option[UUID]) extends ServerMessage
 case class AddNewRoom(title: String, lat: Double, lng: Double) extends ServerMessage
-case class GetFriends(userLoginInfo: LoginInfo) extends ServerMessage
+case class GetFriends(userLoginInfo: UUID) extends ServerMessage
 case class AddedFriend(friend: User, roomID: Option[Int]) extends ServerMessage
 
 case class AddFacebookFriend(myFacebookID: String, friendFacebookID: String) extends ServerMessage

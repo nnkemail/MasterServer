@@ -59,45 +59,14 @@ class ApplicationController @Inject() (
   //}
 
   
-def roomsFacebook = SecuredAction.async { implicit request =>
-    var roomsFuture = getRooms();
-    var friendsFuture = getFriends(request.identity.loginInfo);
-    var friendsInfoToSend = List.empty[FriendPacket]
-       
-    o2Dao.find(request.identity.loginInfo) flatMap { 
+def roomsFacebook = SecuredAction.async { implicit request =>     
+    o2Dao.find(request.identity.loginInfo) map { 
       resultInfo => resultInfo match  {
-        case Some(authInfo) => {
-          var accessToken = authInfo.accessToken
-          
-          var roomsFriendsFuture = for {
-            rooms <- roomsFuture
-            friends <- friendsFuture
-          } yield (rooms, friends)
-          
-          roomsFriendsFuture flatMap { roomsFriends =>
-            var rooms = roomsFriends._1
-            var friends = roomsFriends._2
-            
-            var friendsRoomsFuture = getUsersRooms(friends map {friend => friend.userID})
-            friendsRoomsFuture map { friendsRooms => 
-            
-              for (friend <- friends) {
-                var roomID: String = friendsRooms.get(friend.userID) match {
-                  case Some(optionRoom) => (optionRoom getOrElse "").toString
-                  case None => ""
-                }
-            
-                 friendsInfoToSend = FriendPacket(friend.userID.toString, roomID, 
-                    friend.fullName getOrElse "", friend.avatarURL getOrElse "") :: friendsInfoToSend
-              }
-              
-              Ok(views.html.roomsFacebook(rooms, friendsInfoToSend, accessToken, 
-                 request.identity.loginInfo.providerKey.toString()))
-            }  
-          }
-        }
-              
-        case None => Future.successful(NotFound(<h1>Page not found</h1>))
+        case Some(authInfo) => 
+          var accessToken = authInfo.accessToken 
+          Ok(views.html.roomsFacebook(accessToken, request.identity.loginInfo.providerKey.toString()))
+                  
+        case None => NotFound(<h1>Page not found</h1>)
       }
     }
   }
@@ -155,7 +124,7 @@ def roomsFacebook = SecuredAction.async { implicit request =>
   //def socketLoggedChatMap = WebSocket.acceptWithActor[JsValue, JsValue] { request => out =>
   //  LoggedChatMapActor.props(out, masterServer);
   //}
-  
+  /*
   def getRooms(): Future[List[RoomPacket]] = {
     implicit val timeout = Timeout(5 seconds)
     var resp = ask(masterServer, GiveRooms()).mapTo[List[RoomPacket]] 
@@ -173,9 +142,9 @@ def roomsFacebook = SecuredAction.async { implicit request =>
     var resp = ask(masterServer, GetUsersRooms(users)).mapTo[HashMap[UUID, Option[Int]]]
     resp
   }
-  
+  */
   def logOut = SecuredAction.async { implicit request =>
-   val result = Redirect(routes.ApplicationController.index())
+   val result = Redirect(routes.ApplicationController.index()).withNewSession
    env.eventBus.publish(LogoutEvent(request.identity, request, request2Messages))
 
    env.authenticatorService.discard(request.authenticator, result)

@@ -1,5 +1,5 @@
 @import model.RoomPacket
-@(rooms: List[RoomPacket])(implicit request: RequestHeader)
+@()(implicit request: RequestHeader)
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -34,14 +34,6 @@
         $(document).ready(function() {
             var adress = jsRoutes.controllers.ApplicationController.socketChatMap().webSocketURL()
             var roomsMap = new Rooms(adress);
-            @for(room <- rooms) {
-                var id = @room.id
-                var lat = @room.lat
-                var lng = @room.lng
-                var title = "@(room.title)"
-                var position = new google.maps.LatLng(lat, lng);
-                roomsMap.addMarker(id, position, title);
-            }
 
             $("#PlayRoomButton").on("click", function (event) {
                 if (roomsMap.choosenMarker !== null && roomsMap.choosenMarker.marker.getAnimation() !== null) {

@@ -36,13 +36,13 @@ class MasterServerActor(userDao: UserDAO) extends Actor {
     }
   } */
   
-  def notifyFriendsAboutNewRoom(userID: UUID, roomID: Option[Int]) = {
+  def notifyFriendsAboutNewRoom(userID: UUID, roomID: Option[Int], nick: Option[String]) = {
 	  userDao.getFriends(userID) map {
 		  friendsOptionList =>
 		  for (friendOption <- friendsOptionList) {
 			  friendOption match {
 			  case Some(user) => mapChatLoggedParticipants.get(user.userID) map {
-				  actorAddres => actorAddres ! NotifyFriendAboutMyNewRoom(userID, roomID) 
+				  actorAddres => actorAddres ! NotifyFriendAboutMyNewRoom(userID, roomID, nick) 
 			  }
 			  case None => ;
 			  }
@@ -54,7 +54,7 @@ class MasterServerActor(userDao: UserDAO) extends Actor {
 		  for (friendOption <- friendsOptionList) {
 			  friendOption match {
 			  case Some(user) => mapChatLoggedParticipants.get(user.userID) map {
-				  actorAddres => actorAddres ! NotifyFriendAboutMyNewRoom(userID, roomID) 
+				  actorAddres => actorAddres ! NotifyFriendAboutMyNewRoom(userID, roomID, nick) 
 			  }
 			  case None => ;
 			  }
@@ -82,10 +82,13 @@ class MasterServerActor(userDao: UserDAO) extends Actor {
     case JoinChatMap(userIDOption: Option[UUID]) => {    
       //sender ! SpawnData(util.nextSysId(), util.getRandomPosition(), worldGrid, worldActor)
       //context.watch(sender)
+      self forward GiveRooms()
+      
       userIDOption match { 
         case Some(userID) => {
+          self forward GetFriends(userID)
           mapChatLoggedParticipants += userID -> sender 
-          notifyFriendsAboutNewRoom(userID, Some(0))
+          notifyFriendsAboutNewRoom(userID, Some(0), None)
           
           userDao.find(userID) map { user => user match {
             case Some(user) => LoggedUserInfo(user.fullName getOrElse "", user.avatarURL getOrElse "", user.score)
@@ -103,17 +106,18 @@ class MasterServerActor(userDao: UserDAO) extends Actor {
       userIDOption match { 
         case Some(userID) => 
           mapChatLoggedParticipants -= userID
-          notifyFriendsAboutNewRoom(userID, None)
+          notifyFriendsAboutNewRoom(userID, None, None)
         case None => mapChatParticipants = mapChatParticipants - sender;
       }
       
-    case UserJoinedGame(userID: String, roomID: Int) =>
+    case UserJoinedGame(userID: String, roomID: Int, nick: String) =>
+      println("Przyszlo userJoinedGame " + userID + " " + nick)
       loggedPlayersPlaying += UUID.fromString(userID) -> roomID
-      notifyFriendsAboutNewRoom(UUID.fromString(userID), Some(roomID))
+      notifyFriendsAboutNewRoom(UUID.fromString(userID), Some(roomID), Some(nick))
      
     case UserLeftGame(userID: String) =>
       loggedPlayersPlaying -= UUID.fromString(userID)
-      notifyFriendsAboutNewRoom(UUID.fromString(userID), None)
+      notifyFriendsAboutNewRoom(UUID.fromString(userID), None, None)
                        
     //case Terminated(terminatedActorRef) =>
     //  mapChatParticipants = mapChatParticipants - terminatedActorRef;
@@ -166,12 +170,9 @@ class MasterServerActor(userDao: UserDAO) extends Actor {
       }
       
     case GiveRooms() =>
-      var roomPacketList = List.empty[RoomPacket];
       for ((idRoom, roomDsc) <- rooms)
-        roomPacketList = RoomPacket(idRoom, roomDsc.title, roomDsc.lat, roomDsc.lng) :: roomPacketList
-      println(roomPacketList)
+        sender ! RoomPacket(idRoom, roomDsc.title, roomDsc.lat, roomDsc.lng)
       println("GIVE_ROOMS SENDER: " + sender)
-      sender ! roomPacketList
       
     case AddFacebookFriend(myFacebookID, friendFacebookID) => 
       //userDao.getFriends(LoginInfo("facebook", myFacebookID)) map {friends => friends map {friend => println(friend)}}  
@@ -185,18 +186,17 @@ class MasterServerActor(userDao: UserDAO) extends Actor {
         case None => ;
       }
       
-    case GetFriends(userLoginInfo: LoginInfo) =>
+    case GetFriends(userID: UUID) =>
       val _sender = sender
-      var listOfFriends = ListBuffer.empty[User]
-      
-      userDao.getFriends(userLoginInfo) map { friendsOptionList =>
+      userDao.getFriends(userID) map { friendsOptionList =>
         for (friendOption <- friendsOptionList) {
           friendOption match {
-            case Some(user) => listOfFriends += user
+            case Some(friend) => 
+              var roomIDOption = getUserRoom(friend.userID)
+              _sender ! AddedFriend(friend, roomIDOption)
             case None => ;
           }
-        };
-        _sender ! listOfFriends.toList
+        }
       }
       
     case GetUsersRooms(users: List[UUID]) =>

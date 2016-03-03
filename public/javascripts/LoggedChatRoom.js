@@ -64,7 +64,8 @@ LoggedRooms.prototype = {
             console.log(data)
             var friendID = data.friendID;
             var roomID = data.roomID;
-            this.changeFriendStatus(friendID, roomID);
+            var nick = data.nick;
+            this.changeFriendStatus(friendID, roomID, nick);
         }
     },
 
@@ -188,7 +189,7 @@ LoggedRooms.prototype = {
     },
 
     addFriendToPage: function (friendID, name, avatar) {
-        var resultFriend = '<div id = ' + friendID + ' style="margin:10px; color:#000;font-family:PT Sans, Helvetica, Arial, sans-serif"><img style="margin-right:10px;border-radius: 25px;vertical-align:middle" src=' + avatar + '>' + name + '<img style="float:right; margin-top:10px;" class = "statusImg"/></div><hr>';
+        var resultFriend = '<div id = ' + friendID + ' style="margin:10px; color:#000;font-family:PT Sans, Helvetica, Arial, sans-serif"><img style="margin-right:10px;border-radius: 25px;vertical-align:middle" src=' + avatar + '>' + name + '<img style="float:right; margin-top:10px;" class = "statusImg"/><div id="gameNick"></div></div><hr>';
         var result_holder_GameFriends = document.getElementById('gameFriends');
         result_holder_GameFriends.innerHTML += resultFriend;
     },
@@ -198,20 +199,26 @@ LoggedRooms.prototype = {
     		this.clickMarkerFunction(this.markers[roomID]);} 	
     },
     
-    changeFriendStatus: function (friendID, roomID) {
-    	var t = this;
-    	elem = $("#gameFriends #" + friendID + " .statusImg")
+changeFriendStatus: function (friendID, roomID, nick) {
+        var t = this;
+        elem = $("#gameFriends #" + friendID + " .statusImg")
         if (roomID === '0') {
             $("#gameFriends #" + friendID + " .statusImg").attr("src", "assets/img/status/google_map.png");
+            $("#gameFriends #" + friendID + " #gameNick").text("");
             elem.off('click');
         } else if (roomID == '' || roomID == "") {
             $("#gameFriends #" + friendID + " .statusImg").attr("src", "assets/img/status/open_door.jpg");
+            $("#gameFriends #" + friendID + " #gameNick").text("");
             elem.off('click');
         } else {
-        	$("#gameFriends #" + friendID + " .statusImg").attr("src", "assets/img/status/game.png");
-        	elem.click(function() {
-        		t.showFriendRoomOnMap.call(t, roomID);
-        	});  
+            $("#gameFriends #" + friendID + " .statusImg").attr("src", "assets/img/status/game.png");
+            var gameNick = nick;
+            if (nick === "") {gameNick === "An unnamed cell"};
+
+            $("#gameFriends #" + friendID + " #gameNick").text(gameNick);
+            elem.click(function() {
+                t.showFriendRoomOnMap.call(t, roomID);
+            });  
         }
 
         //alert($("#gameFriends #" + friendID + " .statusImg").attr('src'));

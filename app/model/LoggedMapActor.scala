@@ -52,11 +52,12 @@ class LoggedMapActor(val out: ActorRef, var masterServer: ActorRef, var user: Us
          friend.fullName getOrElse "", friend.avatarURL getOrElse "")
      out ! Json.obj("type" -> "NewFriend", "friend" -> friendPacket)   
      
-   case NotifyFriendAboutMyNewRoom(userID: UUID, roomIDOption: Option[Int]) =>
+   case NotifyFriendAboutMyNewRoom(userID: UUID, roomIDOption: Option[Int], nick: Option[String]) =>
      println("Friend changed room" + roomIDOption)
      //implicit val FriendChangedRoomPacketFormat = Json.format[FriendChangedRoomPacket]
-     out ! Json.obj("type" -> "FriendChangedRoom", "friendID" -> userID.toString, "roomID" -> (roomIDOption getOrElse "").toString)  
-     
+     out ! Json.obj("type" -> "FriendChangedRoom", "friendID" -> userID.toString, "roomID" -> (roomIDOption getOrElse "").toString,
+         "nick" -> (nick getOrElse "").toString)  
+
    case LoggedUserInfo(name: String, avatar: String, score: Int) =>
      out ! Json.obj("type" -> "LoggedUserInfo", "name" -> name, "avatar" -> avatar, "score" -> score)
   }

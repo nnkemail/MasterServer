@@ -25,7 +25,7 @@ case class GetFriends(userLoginInfo: LoginInfo) extends ServerMessage
 case class AddedFriend(friend: User, roomID: Option[Int]) extends ServerMessage
 
 case class AddFacebookFriend(myFacebookID: String, friendFacebookID: String) extends ServerMessage
-case class NotifyFriendAboutMyNewRoom(userID: UUID, roomID: Option[Int]) extends ServerMessage
+case class NotifyFriendAboutMyNewRoom(userID: UUID, roomID: Option[Int], nick: Option[String]) extends ServerMessage
 case class LeaveChatMap(userID: Option[UUID]) extends ServerMessage
 case class FriendChangedRoomPacket(friendID: UUID, roomID: Int) extends ServerMessage
 case class GetUsersRooms(users: List[UUID]) extends ServerMessage
@@ -35,7 +35,7 @@ case class AddedNewServerRoom(roomID: Int, roomDsc: RoomDescription) extends Ser
 case class AddNewServerRoom(roomID: Int) extends ServerMessage
 case class AddNewServerRoomResponse(roomID: Option[Int]) extends ServerMessage
 case class Leave(userID: Option[String]) extends ServerMessage
-case class UserJoinedGame(userID: String, roomID: Int) extends ServerMessage
+case class UserJoinedGame(userID: String, roomID: Int, nick: String) extends ServerMessage
 case class UserLeftGame(userID: String) extends ServerMessage
 case class RestartMyGame() extends ServerMessage
 case class RestartGame(startPosition: Position) extends ServerMessage

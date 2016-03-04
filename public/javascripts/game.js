@@ -275,6 +275,7 @@ onKeyDown: function (event) {
                 this.sendWebSocket({type: "w"});
                 this.keyW = true;
             }
+            break;
         case 27: 
             $("#endMenu").toggle();
     }

@@ -275,6 +275,8 @@ onKeyDown: function (event) {
                 this.sendWebSocket({type: "w"});
                 this.keyW = true;
             }
+        case 27: 
+            $("#endMenu").toggle();
     }
 },
 

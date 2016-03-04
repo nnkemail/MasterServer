@@ -10,7 +10,7 @@ object MapActor {
 
 class MapActor(val out: ActorRef, var masterServer: ActorRef) extends Actor {
   override def preStart() = {
-    masterServer ! JoinChatMap
+    masterServer ! JoinChatMap(None)
   }
   
   def receive = {
